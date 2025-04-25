@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track count per Genre</title>
+</head>
+<body>
+<h1>Track Count Per Genre</h1>
+<ul>
+    {% for row in data %}
+        <li>{{ row.genre }} - {{ row.count }} tracks</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
