@@ -14,15 +14,23 @@ from music.models import *
 def album_list(request):
     heading = request.GET.get('model', 'All Albums')
     data = Album.objects.values_list('title', flat=True)
-    return render(request, 'album_list.html', {'data': data, 'heading': heading})
+    return render(request, 'list.html', {'data': data, 'heading': heading})
 
 
 def track_list(request):
     heading = request.GET.get('model', 'All Tracks')
     data = Track.objects.values_list('name', flat=True)
-    return render(request, 'album_list.html', {'data': data, 'heading': heading})
+    return render(request, 'list.html', {'data': data, 'heading': heading})
 
 
+def artist_list(request):
+    heading = request.GET.get('model', 'All Artists')
+    data = Artist.objects.values_list('name', flat=True)
+    print(data)
+    return render(request, 'list.html', {'data': data, 'heading': heading})
+
+
+# VIEWS
 def tracks_count_per_genre(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM track_count_per_genre;")
@@ -34,8 +42,22 @@ def tracks_count_per_genre(request):
     return render(request, 'track_count_per_genre.html', {'data': data})
 
 
-def artist_list(request):
-    heading = request.GET.get('model', 'All Artists')
-    data = Artist.objects.values_list('name', flat=True)
+def avg_track_duration(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM avg_track_duration_per_artist;")
+        rows = cursor.fetchall()
+
+    data = [{'artist': row[0], 'avg': row[1]} for row in rows]
     print(data)
-    return render(request, 'album_list.html', {'data': data, 'heading': heading})
+
+    return render(request, 'avg_track_duration.html', {'data': data})
+
+
+def rank_list_most_active_customers(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM rank_list_most_active_customers_view;")
+        rows = cursor.fetchall()
+
+    data = [{'name': row[0], 'total_orders': row[1], 'total_money_spent': row[2]} for row in rows]
+
+    return render(request, 'rank_list_most_active_customers.html', {'data': data})

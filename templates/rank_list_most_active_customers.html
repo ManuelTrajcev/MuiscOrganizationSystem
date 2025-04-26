@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Most active customers</title>
+</head>
+<body>
+<h1>Most active customers</h1>
+<ol>
+    <h4>Name&emsp;-&emsp;Total orders&emsp;-&emsp;Total money spent</h4>
+
+    {% for row in data %}
+        <li>{{ row.name }}&emsp;-&emsp;{{ row.total_orders }}&emsp;-&emsp;${{ row.total_money_spent }}</li>
+    {% endfor %}
+</ol>
+</body>
+</html>
+

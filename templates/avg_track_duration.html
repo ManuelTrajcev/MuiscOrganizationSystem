@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Average track duration per artist</title>
+</head>
+<body>
+<h1>Average track duration per artist</h1>
+<ul>
+    {% for row in data %}
+        <li>{{ row.artist }} - {{ row.avg }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

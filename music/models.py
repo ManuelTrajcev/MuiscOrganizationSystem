@@ -162,17 +162,3 @@ class PlaylistTrack(models.Model):
 
     def __str__(self):
         return f"{self.playlist} - {self.track}"
-
-
-#VIEWS
-
-class tracks_count_per_genre(models.Model):
-    genre = models.CharField(max_length=20, blank=True, null=True)
-    count = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'tracks_count_per_genre'
-        managed = False
-
-    def __str__(self):
-        return f"{self.genre} - {self.count}"
