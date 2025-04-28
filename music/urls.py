@@ -4,8 +4,12 @@ from . import views
 urlpatterns = [
     path('album/', views.album_list, name='album_list'),
     path('artist/', views.artist_list, name='artist_list'),
-    path('artist/avg_track_duration', views.avg_track_duration, name='avg_track_duration'),
+    path('artist/avg-track-duration', views.avg_track_duration, name='avg_track_duration'),
+    path('artist/avg-track-price', views.avg_price_per_artist, name='avg_track_price'),
+    path('artist/most-popular', views.rank_list_artists, name='rank_list_artists'),
     path('track/', views.track_list, name='track_list'),
-    path('track/per_genre', views.tracks_count_per_genre, name='track_count_per_genre'),
-    path('customer/rank_list', views.rank_list_most_active_customers, name='rank_list_most_active_customers'),
+    path('customer/genre', views.most_listened_genre_per_customer, name='most_listened_genre_per_customer'),
+    path('media-type/percentage', views.media_type_percentage, name='media_type_percentage'),
+    path('track/per-genre', views.tracks_count_per_genre, name='track_count_per_genre'),
+    path('customer/rank-list', views.rank_list_most_active_customers, name='rank_list_most_active_customers'),
 ]

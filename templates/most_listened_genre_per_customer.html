@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Most listened Genre per Customer</title>
+</head>
+<body>
+<h1>Most listened Genre per Customer</h1>
+<ol>
+    <h4>First Name-&emsp;Last Name&emsp;-&emsp;Genre</h4>
+
+    {% for row in data %}
+        <li>{{ row.first_name }}&emsp;-&emsp;{{ row.last_name }}&emsp;-&emsp;{{ row.most_listened_genre }}</li>
+    {% endfor %}
+</ol>
+</body>
+</html>
+

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Average Track Price per Artist</title>
+</head>
+<body>
+<h1>Average Track Price per Artist</h1>
+<ol>
+    <h4>Name&emsp;-&emsp;Avg. track price</h4>
+
+    {% for row in data %}
+        <li>{{ row.name }}&emsp;-&emsp;{{ row.avg_price_per_track }}</li>
+    {% endfor %}
+</ol>
+</body>
+</html>
+

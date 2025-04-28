@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Most active customers</title>
+</head>
+<body>
+<h1>Most active customers</h1>
+<ol>
+    <h4>Media Type-&emsp;Num of tracks&emsp;-&emsp;Percentage</h4>
+
+    {% for row in data %}
+        <li>{{ row.name }}&emsp;-&emsp;{{ row.num_of_tracks }}&emsp;-&emsp;{{ row.percentage }}%</li>
+    {% endfor %}
+</ol>
+</body>
+</html>
+

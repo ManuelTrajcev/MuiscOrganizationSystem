@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Most popular Artist</title>
+</head>
+<body>
+<h1>Most popular Artist</h1>
+<ol>
+    <h4>Name&emsp;-&emsp;Total invoices</h4>
+
+    {% for row in data %}
+        <li>{{ row.name }}&emsp;-&emsp;{{ row.num_invoices }}</li>
+    {% endfor %}
+</ol>
+</body>
+</html>
+
