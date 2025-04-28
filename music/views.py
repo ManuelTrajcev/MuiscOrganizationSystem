@@ -83,7 +83,6 @@ def rank_list_artists(request):
     return render(request, 'rank_list_artists.html', {'data': data})
 
 
-
 def media_type_percentage(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM media_type_percentage;")
@@ -102,3 +101,34 @@ def most_listened_genre_per_customer(request):
     data = [{'first_name': row[0], 'last_name': row[1], 'most_listened_genre': row[2]} for row in rows]
 
     return render(request, 'most_listened_genre_per_customer.html', {'data': data})
+
+
+def genres_per_customer(request):
+    customers = Customer.objects.all()
+    selected_customer_id = request.GET.get('customer_id')
+    data = []
+
+    if selected_customer_id:
+        query = """
+            SELECT c.first_name as first_name, c.last_name as last_name, g.name as genre, COUNT(tr.track_id) as track_count
+            FROM customer c
+            LEFT JOIN invoice i ON c.customer_id = i.customer_id
+            LEFT JOIN invoice_line il ON i.invoice_id = il.invoice_id
+            LEFT JOIN track tr ON il.track_id = tr.track_id
+            LEFT JOIN genre g ON tr.genre_id = g.genre_id
+            WHERE c.customer_id = %s
+            GROUP BY c.customer_id, c.first_name, c.last_name, g.genre_id, g.name
+            ORDER BY c.first_name
+        """
+
+        with connection.cursor() as cursor:
+            cursor.execute(query, [selected_customer_id])
+            rows = cursor.fetchall()
+            data = [{'first_name': row[0], 'last_name': row[1], 'genre': row[2], 'track_count': row[3]} for row in rows]
+
+
+    return render(request, 'genres_per_customer.html', {
+        'customers': customers,
+        'data': data,
+        'selected_customer_id': selected_customer_id,
+    })

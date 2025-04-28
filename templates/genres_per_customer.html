@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number of tracks from each genre per Customer</title>
+</head>
+<body>
+<h1>Number of tracks from each genre per Customer</h1>
+
+<form method="GET" action="">
+    <label for="customer_id">Select Customer:</label>
+    <select name="customer_id" id="customer_id">
+        <option value="">All Customers</option>
+        {% for customer in customers %}
+            <option value="{{ customer.customer_id }}"
+                    {% if request.GET.customer_id == customer.0|stringformat:'s' %}selected{% endif %}>
+                {{ customer.first_name }} {{ customer.last_name }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<h4>First Name&nbsp;&nbsp;Last Name&nbsp;&nbsp;-&nbsp;&nbsp;Genre - Num of Tracks</h4>
+
+<ol>
+    {% for row in data %}
+        <li>
+            {{ row.first_name }}&emsp;-&emsp;{{ row.last_name }}&emsp;-&emsp;{{ row.genre }}&emsp;-&emsp;{{ row.track_count }}</li>
+    {% endfor %}
+</ol>
+
+</body>
+</html>
