@@ -20,9 +20,9 @@
     <button type="submit">Filter</button>
 </form>
 
-<h4>First Name&nbsp;&nbsp;Last Name&nbsp;&nbsp;-&nbsp;&nbsp;Genre - Num of Tracks</h4>
 
 <ol>
+    <h4>First Name&nbsp;&nbsp;Last Name&nbsp;&nbsp;-&nbsp;&nbsp;Genre - Num of Tracks</h4>
     {% for row in data %}
         <li>
             {{ row.first_name }}&emsp;-&emsp;{{ row.last_name }}&emsp;-&emsp;{{ row.genre }}&emsp;-&emsp;{{ row.track_count }}</li>

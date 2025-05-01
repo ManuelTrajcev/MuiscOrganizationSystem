@@ -126,9 +126,58 @@ def genres_per_customer(request):
             rows = cursor.fetchall()
             data = [{'first_name': row[0], 'last_name': row[1], 'genre': row[2], 'track_count': row[3]} for row in rows]
 
-
     return render(request, 'genres_per_customer.html', {
         'customers': customers,
+        'data': data,
+        'selected_customer_id': selected_customer_id,
+    })
+
+
+def invoice_per_customer_after_date(request):
+    customers = Customer.objects.all()
+    selected_customer_id = request.GET.get('customer_id')
+    selected_date = request.GET.get('invoice_date', '2000-01-01')
+    data = []
+    sum = 0
+
+    if selected_customer_id:
+        if selected_date:
+            query = """
+                SELECT c.first_name, c.last_name, i.invoice_date::date, i.total
+                FROM customer c
+                JOIN invoice i ON c.customer_id = i.customer_id
+                WHERE c.customer_id = %s AND i.invoice_date > %s
+                ORDER BY i.invoice_date
+            """
+            with connection.cursor() as cursor:
+                cursor.execute(query, [selected_customer_id, selected_date])
+                rows = cursor.fetchall()
+                for r in rows:
+                    sum += r[3]
+
+                data = [{'first_name': row[0], 'last_name': row[1], 'invoice_date': row[2], 'total': row[3]} for row in
+                        rows]
+        else:
+            query = """
+                            SELECT c.first_name, c.last_name, i.invoice_date::date, i.total
+                            FROM customer c
+                            JOIN invoice i ON c.customer_id = i.customer_id
+                            WHERE c.customer_id = %s
+                            ORDER BY i.invoice_date
+                        """
+            with connection.cursor() as cursor:
+                cursor.execute(query, [selected_customer_id])
+                rows = cursor.fetchall()
+                for r in rows:
+                    sum += r[3]
+
+                data = [{'first_name': row[0], 'last_name': row[1], 'invoice_date': row[2], 'total': row[3]}
+                        for row in
+                        rows]
+
+    return render(request, 'invoices_per_customer_after_date.html', {
+        'customers': customers,
+        'total_sum': sum,
         'data': data,
         'selected_customer_id': selected_customer_id,
     })

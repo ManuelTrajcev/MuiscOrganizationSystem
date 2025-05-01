@@ -9,6 +9,7 @@ urlpatterns = [
     path('artist/most-popular', views.rank_list_artists, name='rank_list_artists'),
     path('track/', views.track_list, name='track_list'),
     path('customer/genres-per-customer', views.genres_per_customer, name='genres_per_customer'),
+    path('customer/invoices-per-customer', views.invoice_per_customer_after_date, name='invoice_per_customer_after_date'),
     path('customer/most-popular-genre-per-customer', views.most_listened_genre_per_customer, name='most_listened_genre_per_customer'),
     path('media-type/percentage', views.media_type_percentage, name='media_type_percentage'),
     path('track/per-genre', views.tracks_count_per_genre, name='track_count_per_genre'),
