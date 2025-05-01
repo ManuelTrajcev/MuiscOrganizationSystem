@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Average track duration per artist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous"></script>
+    <title>Average Track Duration per Artist</title>
 </head>
-<body>
-<h1>Average track duration per artist</h1>
-<ul>
-    {% for row in data %}
-        <li>{{ row.artist }} - {{ row.avg }}</li>
-    {% endfor %}
-</ul>
+<body class="d-flex bg-light">
+    {% include 'sidebar.html' %}
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Average Track Duration per Artist</h1>
+
+        <div class="list-group">
+            {% for row in data %}
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ row.artist }}</strong>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">{{ row.avg }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

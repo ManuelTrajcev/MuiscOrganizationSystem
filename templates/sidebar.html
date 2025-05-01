@@ -1,0 +1,65 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px;">
+    <h4 class="mb-4">Navigation</h4>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="{% url 'album_list' %}" class="nav-link {% if request.path == '/album/' %}active{% endif %}" aria-current="page">
+                Album List
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'artist_list' %}" class="nav-link {% if request.path == '/artist/' %}active{% endif %}">
+                Artist List
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'avg_track_duration' %}" class="nav-link {% if request.path == '/artist/avg-track-duration' %}active{% endif %}">
+                Average Track Duration
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'avg_track_price' %}" class="nav-link {% if request.path == '/artist/avg-track-price' %}active{% endif %}">
+                Average Track Price per Artist
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'rank_list_artists' %}" class="nav-link {% if request.path == '/artist/most-popular' %}active{% endif %}">
+                Artist with Highest Earnings
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'track_list' %}" class="nav-link {% if request.path == '/track/' %}active{% endif %}">
+                Track List
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'genres_per_customer' %}" class="nav-link {% if request.path == '/customer/genres-per-customer' %}active{% endif %}">
+                Genres per Customer
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'invoice_per_customer_after_date' %}" class="nav-link {% if request.path == '/customer/invoices-per-customer' %}active{% endif %}">
+                Invoices per Customer
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'most_listened_genre_per_customer' %}" class="nav-link {% if request.path == '/customer/most-popular-genre-per-customer' %}active{% endif %}">
+                Most Popular Genre per Customer
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'media_type_percentage' %}" class="nav-link {% if request.path == '/media-type/percentage' %}active{% endif %}">
+                Media Type Percentage
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'track_count_per_genre' %}" class="nav-link {% if request.path == '/track/per-genre' %}active{% endif %}">
+                Track Count per Genre
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'rank_list_most_active_customers' %}" class="nav-link {% if request.path == '/customer/rank-list' %}active{% endif %}">
+                Rank List of Most Active Customers
+            </a>
+        </li>
+    </ul>
+</div>

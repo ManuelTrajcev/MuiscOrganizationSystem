@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Most popular Artist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous"></script>
+    <title>Artist with Highest Earnings</title>
 </head>
-<body>
-<h1>Most popular Artist</h1>
-<ol>
-    <h4>Name&emsp;-&emsp;Total invoices</h4>
+<body class="d-flex bg-light">
+{% include 'sidebar.html' %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Artist with Highest Earnings</h1>
 
-    {% for row in data %}
-        <li>{{ row.name }}&emsp;-&emsp;{{ row.num_invoices }}</li>
-    {% endfor %}
-</ol>
+    <div class="list-group">
+        <div class="row">
+            <div class="col-4 font-weight-bold"><strong>Name</strong></div>
+            <div class="col-4 font-weight-bold"><strong>Total Invoices</strong></div>
+            <div class="col-4 font-weight-bold"><strong>Total Money Earned</strong></div>
+        </div>
+
+        {% for row in data %}
+
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="row">
+                    <div class="col-4 font-weight-bold">{{ row.name }}</div>
+                    <div class="col-4 font-weight-bold">{{ row.num_invoices }}</div>
+                    <div class="col-4 font-weight-bold">${{ row.money_earned }}</div>
+                </div>
+            </a>
+
+        {% empty %}
+            <div class="alert alert-warning" role="alert">
+                No data found.
+            </div>
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>
-

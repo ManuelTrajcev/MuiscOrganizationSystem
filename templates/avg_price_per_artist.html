@@ -1,17 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Average Track Price per Artist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous"></script>
 </head>
-<body>
-<h1>Average Track Price per Artist</h1>
-<ol>
-    <h4>Name&emsp;-&emsp;Avg. track price</h4>
+<body class="d-flex bg-light">
 
-    {% for row in data %}
-        <li>{{ row.name }}&emsp;-&emsp;{{ row.avg_price_per_track }}</li>
-    {% endfor %}
-</ol>
+{% include 'sidebar.html' %}
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Average Track Price per Artist</h1>
+
+    <h4 class="mb-4 text-center">Name - Average Track Price</h4>
+
+    {% if not data %}
+        <div class="alert alert-warning" role="alert">
+            No data available.
+        </div>
+    {% else %}
+        <ul class="list-group">
+            {% for row in data %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="col-6">
+                        <strong>{{ row.name }}</strong>
+                    </div>
+                    <div class="col-6 text-end">
+                        {% if row.avg_price_per_track == 'not enogu data' %}
+                            <span class="badge bg-danger rounded-pill">No data available</span>
+                        {% else %}
+                            <span class="badge bg-success rounded-pill">${{ row.avg_price_per_track|floatformat:2 }}</span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
 </body>
 </html>
-

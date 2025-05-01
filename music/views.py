@@ -78,7 +78,7 @@ def rank_list_artists(request):
         cursor.execute("SELECT * FROM rank_list_artists;")
         rows = cursor.fetchall()
 
-    data = [{'name': row[0], 'num_invoices': row[1]} for row in rows]
+    data = [{'name': row[0], 'num_invoices': row[1], 'money_earned': row[2]} for row in rows]
 
     return render(request, 'rank_list_artists.html', {'data': data})
 
