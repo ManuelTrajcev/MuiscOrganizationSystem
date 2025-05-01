@@ -18,7 +18,7 @@
             {% for row in data %}
                 <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>{{ row.artist }}</strong>
+                        {{ row.artist }}
                     </div>
                     <span class="badge bg-primary rounded-pill">{{ row.avg }}</span>
                 </a>

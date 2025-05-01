@@ -9,22 +9,30 @@
     <title>Most listened Genre per Customer</title>
 </head>
 <body class="d-flex bg-light">
-    {% include 'sidebar.html' %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Most Listened Genre per Customer</h1>
+{% include 'sidebar.html' %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Most Listened Genre per Customer</h1>
 
-        <div class="list-group">
-            <h4 class="mb-3">First Name &emsp; Last Name &emsp; - &emsp; Genre</h4>
-            {% for row in data %}
-                <a href="#" class="list-group-item list-group-item-action">
-                    {{ row.first_name }} &emsp;-&emsp; {{ row.last_name }} &emsp;-&emsp; {{ row.most_listened_genre }}
-                </a>
-            {% empty %}
-                <div class="alert alert-warning" role="alert">
-                    No data found.
-                </div>
-            {% endfor %}
+    <div class="list-group">
+        <div class="row">
+            <div class="col-4 font-weight-bold"><strong>First Name</strong></div>
+            <div class="col-4 font-weight-bold"><strong>Last Name</strong></div>
+            <div class="col-4 font-weight-bold"><strong>Genre</strong></div>
         </div>
+        {% for row in data %}
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="row">
+                    <div class="col-4 font-weight-bold">{{ row.first_name }}</div>
+                    <div class="col-4 font-weight-bold">{{ row.last_name }}</div>
+                    <div class="col-4 font-weight-bold">{{ row.most_listened_genre }}</div>
+                </div>
+            </a>
+        {% empty %}
+            <div class="alert alert-warning" role="alert">
+                No data found.
+            </div>
+        {% endfor %}
     </div>
+</div>
 </body>
 </html>

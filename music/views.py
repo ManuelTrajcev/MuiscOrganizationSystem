@@ -2,6 +2,7 @@ from django.shortcuts import render
 import os
 import django
 from django.db import connection
+from django.shortcuts import redirect
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MuiscOrganizationSystem.settings')
 django.setup()
@@ -10,6 +11,12 @@ from music.models import *
 
 
 # Create your views here.
+
+def home_page(request):
+    return render(request, 'home.html')
+
+def redirect_to_home(request, exception):
+    return redirect('home_page')
 
 def album_list(request):
     heading = request.GET.get('model', 'All Albums')
@@ -26,7 +33,7 @@ def track_list(request):
 def artist_list(request):
     heading = request.GET.get('model', 'All Artists')
     data = Artist.objects.values_list('name', flat=True)
-    print(data)
+
     return render(request, 'list.html', {'data': data, 'heading': heading})
 
 
@@ -37,7 +44,6 @@ def tracks_count_per_genre(request):
         rows = cursor.fetchall()
 
     data = [{'genre': row[0], 'count': row[1]} for row in rows]
-    print(data)
 
     return render(request, 'track_count_per_genre.html', {'data': data})
 
@@ -48,7 +54,6 @@ def avg_track_duration(request):
         rows = cursor.fetchall()
 
     data = [{'artist': row[0], 'avg': row[1]} for row in rows]
-    print(data)
 
     return render(request, 'avg_track_duration.html', {'data': data})
 
@@ -107,8 +112,10 @@ def genres_per_customer(request):
     customers = Customer.objects.all()
     selected_customer_id = request.GET.get('customer_id')
     data = []
+    customer = None
 
     if selected_customer_id:
+        customer = Customer.objects.filter(customer_id=selected_customer_id).first()
         query = """
             SELECT c.first_name as first_name, c.last_name as last_name, g.name as genre, COUNT(tr.track_id) as track_count
             FROM customer c
@@ -129,6 +136,52 @@ def genres_per_customer(request):
     return render(request, 'genres_per_customer.html', {
         'customers': customers,
         'data': data,
+        'customer': customer,
+        'selected_customer_id': selected_customer_id,
+    })
+
+def most_popular_artist_per_customer_per_genre(request):
+    customers = Customer.objects.all()
+    selected_customer_id = request.GET.get('customer_id')
+    data = []
+    customer = []
+    if selected_customer_id:
+        query = """WITH PlayCounts AS (
+                SELECT
+                    g.genre_id,
+                    g.name AS genre_name,
+                    ar.name AS artist_name,
+                    COUNT(*) AS play_count
+                FROM customer c
+                JOIN invoice i ON c.customer_id = i.customer_id
+                JOIN invoice_line il ON i.invoice_id = il.invoice_id
+                JOIN track tr ON il.track_id = tr.track_id
+                JOIN genre g ON tr.genre_id = g.genre_id
+                JOIN album a ON tr.album_id = a.album_id
+                JOIN artist ar ON a.artist_id = ar.artist_id
+                WHERE c.customer_id = %s
+                GROUP BY g.genre_id, g.name, ar.name
+            ),
+            MaxPlayCounts AS (
+                SELECT genre_id, MAX(play_count) AS max_count
+                FROM PlayCounts
+                GROUP BY genre_id
+            )
+            SELECT pc.genre_name, pc.artist_name, pc.play_count
+            FROM PlayCounts pc
+            JOIN MaxPlayCounts mpc ON pc.genre_id = mpc.genre_id AND pc.play_count = mpc.max_count;
+        """
+        customer = Customer.objects.filter(customer_id=selected_customer_id).first()
+
+        with connection.cursor() as cursor:
+            cursor.execute(query, [selected_customer_id])
+            rows = cursor.fetchall()
+            data = [{'genre': row[0], 'arist': row[1]} for row in rows]
+
+    return render(request, 'most_popular_artist_per_customer_per_genre.html', {
+        'customers': customers,
+        'customer': customer,
+        'data': data,
         'selected_customer_id': selected_customer_id,
     })
 
@@ -139,8 +192,10 @@ def invoice_per_customer_after_date(request):
     selected_date = request.GET.get('invoice_date', '2000-01-01')
     data = []
     sum = 0
+    customer = None
 
     if selected_customer_id:
+        customer = Customer.objects.filter(customer_id=selected_customer_id).first()
         if selected_date:
             query = """
                 SELECT c.first_name, c.last_name, i.invoice_date::date, i.total
@@ -179,5 +234,6 @@ def invoice_per_customer_after_date(request):
         'customers': customers,
         'total_sum': sum,
         'data': data,
+        'customer': customer,
         'selected_customer_id': selected_customer_id,
     })

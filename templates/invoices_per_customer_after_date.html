@@ -26,7 +26,6 @@
                 {% endfor %}
             </select>
         </div>
-
         <div class="col-md-4">
             <label for="invoice_date" class="form-label">Select Date:</label>
             <input type="date" id="invoice_date" name="invoice_date" value="{{ request.GET.invoice_date }}"
@@ -37,6 +36,14 @@
             <button type="submit" class="btn btn-primary w-100">Filter</button>
         </div>
     </form>
+
+      {% if customer %}
+            <div class="row display-5">
+                <div class="col-3 bg-light-subtle m-1 pb-3 border border-secondary-subtle rounded-3">
+                    {{ customer }}
+                </div>
+            </div>
+        {% endif %}
 
     {% if not selected_customer_id %}
         <div class="alert alert-warning" role="alert">
