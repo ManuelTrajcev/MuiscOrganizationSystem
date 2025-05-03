@@ -18,6 +18,7 @@ def home_page(request):
 def redirect_to_home(request, exception):
     return redirect('home_page')
 
+## LIST OF ALL ##
 def album_list(request):
     heading = request.GET.get('model', 'All Albums')
     data = Album.objects.values_list('title', flat=True)
@@ -37,7 +38,7 @@ def artist_list(request):
     return render(request, 'list.html', {'data': data, 'heading': heading})
 
 
-# VIEWS
+## VIEWS ##
 def tracks_count_per_genre(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM track_count_per_genre;")
@@ -107,6 +108,8 @@ def most_listened_genre_per_customer(request):
 
     return render(request, 'most_listened_genre_per_customer.html', {'data': data})
 
+
+## QUERRIES ##
 
 def genres_per_customer(request):
     customers = Customer.objects.all()
