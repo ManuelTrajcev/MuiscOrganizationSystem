@@ -112,7 +112,7 @@ class Track(models.Model):
 
 class Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customer_id')
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, db_column='customer_id', null=True)
     invoice_date = models.DateTimeField()
     billing_address = models.CharField(max_length=70, blank=True, null=True)
     billing_city = models.CharField(max_length=40, blank=True, null=True)
@@ -157,7 +157,6 @@ class PlaylistTrack(models.Model):
 
     class Meta:
         db_table = 'playlist_track'
-        managed = False
         unique_together = (('playlist', 'track'),)
 
     def __str__(self):
@@ -169,10 +168,10 @@ class DeletedCustomerLog(models.Model):
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=20)
     deleted_at = models.DateTimeField()
-
+    total_spent = models.DecimalField(max_digits=10, decimal_places=2)
+    invoice_count = models.IntegerField()
     class Meta:
         db_table = 'deleted_customer_log'
-        managed = False
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} {self.deleted_at}"
+        return f"{self.first_name} {self.last_name} - Deleted on {self.deleted_at} - Total Spent: ${self.total_spent} from {self.invoice_count} invoices"
