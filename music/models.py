@@ -126,6 +126,7 @@ class Invoice(models.Model):
 
     class Meta:
         db_table = 'invoice'
+        managed = False
 
 
 class InvoiceLine(models.Model):
@@ -137,6 +138,7 @@ class InvoiceLine(models.Model):
 
     class Meta:
         db_table = 'invoice_line'
+        managed = False
 
 
 class Playlist(models.Model):
@@ -157,6 +159,7 @@ class PlaylistTrack(models.Model):
 
     class Meta:
         db_table = 'playlist_track'
+        managed = False
         unique_together = (('playlist', 'track'),)
 
     def __str__(self):
@@ -172,6 +175,20 @@ class DeletedCustomerLog(models.Model):
     invoice_count = models.IntegerField()
     class Meta:
         db_table = 'deleted_customer_log'
+        managed = False
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - Deleted on {self.deleted_at} - Total Spent: ${self.total_spent} from {self.invoice_count} invoices"
+
+class Price(models.Model):
+    price_id = models.AutoField(primary_key=True)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+    track_id = models.ForeignKey(Track, on_delete=models.DO_NOTHING, db_column='track_id')
+
+    class Meta:
+        managed = False
+        db_table = 'price'
+
+    def __str__(self):
+        return f"{self.track_id} - {self.value} - {self.date}"
