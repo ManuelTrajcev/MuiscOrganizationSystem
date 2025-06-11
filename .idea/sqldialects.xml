@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/music/procedures/insert_track_with_price.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/customer_deletion.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/media_type_deletion.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/normalize_and_validate_customer_email.sql" dialect="PostgreSQL" />
