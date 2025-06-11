@@ -10,6 +10,7 @@
     <file url="file://$PROJECT_DIR$/music/triggers/normalize_and_validate_customer_email.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/prevent_artist_deletion.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/prevent_genre_deletion.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/music/triggers/prevent_price_deletion.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/update_invoice_total_after_delete.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/update_invoice_total_after_insert.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/views/avg_price_per_artist.sql" dialect="PostgreSQL" />
