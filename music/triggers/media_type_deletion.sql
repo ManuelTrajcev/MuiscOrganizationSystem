@@ -1,20 +1,14 @@
-CREATE OR REPLACE FUNCTION media_type_deletion()
+CREATE OR REPLACE FUNCTION prevent_deletion_of_default_media_type()
 RETURNS TRIGGER AS $$
 BEGIN
     IF OLD.media_type_id = 1 THEN
-        RAISE EXCEPTION 'Cannot delete default media type (MPEG audio file with id = 1).';
+        RAISE EXCEPTION 'Cannot delete default media type (id = 1)';
     END IF;
-
-    UPDATE track
-    SET media_type_id = 1
-    WHERE media_type_id = OLD.media_type_id;
-
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
-
-CREATE TRIGGER trg_media_type_deletion
+CREATE TRIGGER trg_prevent_deletion_of_default_media_type
 BEFORE DELETE ON media_type
 FOR EACH ROW
-EXECUTE FUNCTION media_type_deletion();
+EXECUTE FUNCTION prevent_deletion_of_default_media_type();
