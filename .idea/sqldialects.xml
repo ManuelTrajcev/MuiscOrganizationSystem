@@ -5,6 +5,7 @@
     <file url="file://$PROJECT_DIR$/music/constrains/soft_delete.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/normalization/personal_info.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/procedures/insert_track_with_price.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/music/transactions/add_tracks_to_playlist.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/transactions/create_invoice_with_lines.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/customer_deletion.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/music/triggers/media_type_deletion.sql" dialect="PostgreSQL" />
