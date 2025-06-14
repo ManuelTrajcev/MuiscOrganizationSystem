@@ -21,4 +21,6 @@ urlpatterns = [
     path('media-type/percentage', views.media_type_percentage, name='media_type_percentage'),
     path('track/per-genre', views.tracks_count_per_genre, name='track_count_per_genre'),
     path('customer/rank-list', views.rank_list_most_active_customers, name='rank_list_most_active_customers'),
+    path('employee/batch-update-reports-to/', views.batch_update_reports_to, name='batch_update_reports_to'),
+
 ]

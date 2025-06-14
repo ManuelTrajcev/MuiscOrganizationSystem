@@ -79,5 +79,11 @@
                 Most Popular Artists Per Customer
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{% url 'batch_update_reports_to' %}"
+               class="nav-link {% if request.path == 'employee/batch-update-reports-to/' %}active{% endif %}">
+                Update manager
+            </a>
+        </li>
     </ul>
 </div>

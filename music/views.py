@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 import os
 import django
@@ -240,3 +242,36 @@ def invoice_per_customer_after_date(request):
         'customer': customer,
         'selected_customer_id': selected_customer_id,
     })
+
+from django.shortcuts import render, redirect
+from music.models import Employee
+from django.contrib import messages
+
+def batch_update_reports_to(request):
+    selected_manager_id = request.POST.get('manager_id') or request.GET.get('manager_id')
+    employees = Employee.objects.exclude(employee_id=selected_manager_id) if selected_manager_id else Employee.objects.all()
+
+    if request.method == 'POST':
+        selected_employee_ids = request.POST.getlist('employee_ids')
+
+        if selected_manager_id and selected_employee_ids:
+            json_data = json.dumps([
+                {"employee_id": int(emp_id), "reports_to_id": int(selected_manager_id)}
+                for emp_id in selected_employee_ids
+            ])
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT batch_update_reports_to(%s::json);", [json_data])
+                messages.success(request, "Batch update successful.")
+                return redirect('batch_update_reports_to')
+
+            except Exception as e:
+                messages.error(request, f"Error during update: {e}")
+
+    all_employees = Employee.objects.all()
+    return render(request, 'batch_update_reports_to.html', {
+        'employees': employees,
+        'all_employees': all_employees,
+        'selected_manager_id': selected_manager_id
+    })
+
