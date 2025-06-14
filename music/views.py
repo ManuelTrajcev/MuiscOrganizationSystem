@@ -275,3 +275,30 @@ def batch_update_reports_to(request):
         'selected_manager_id': selected_manager_id
     })
 
+def add_tracks_to_playlist(request):
+    playlists = Playlist.objects.all()
+    tracks = Track.objects.all()
+    selected_playlist_id = request.POST.get('playlist_id') or request.GET.get('playlist_id')
+
+    if request.method == 'POST':
+        selected_track_ids = request.POST.getlist('track_ids')
+
+        if selected_playlist_id and selected_track_ids:
+            json_data = json.dumps([
+                {"track_id": int(track_id)}
+                for track_id in selected_track_ids
+            ])
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT add_tracks_to_playlist(%s, %s::json);", [selected_playlist_id, json_data])
+                messages.success(request, "Tracks successfully added to playlist.")
+                return redirect('add_tracks_to_playlist')
+
+            except Exception as e:
+                messages.error(request, f"Error adding tracks: {e}")
+
+    return render(request, 'add_tracks_to_playlist.html', {
+        'playlists': playlists,
+        'tracks': tracks,
+        'selected_playlist_id': selected_playlist_id
+    })

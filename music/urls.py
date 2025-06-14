@@ -22,5 +22,6 @@ urlpatterns = [
     path('track/per-genre', views.tracks_count_per_genre, name='track_count_per_genre'),
     path('customer/rank-list', views.rank_list_most_active_customers, name='rank_list_most_active_customers'),
     path('employee/batch-update-reports-to/', views.batch_update_reports_to, name='batch_update_reports_to'),
+    path('playlists/add-tracks/', views.add_tracks_to_playlist, name='add_tracks_to_playlist'),
 
 ]

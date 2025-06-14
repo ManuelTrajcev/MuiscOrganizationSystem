@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Tracks to Playlist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex bg-light">
+{% include 'sidebar.html' %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Add Tracks to Playlist</h1>
+
+    <form method="post" class="card p-4 shadow-sm bg-white">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="playlist_id" class="form-label"><strong>Select Playlist</strong></label>
+            <select name="playlist_id" id="playlist_id" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Choose Playlist --</option>
+                {% for playlist in playlists %}
+                    <option value="{{ playlist.playlist_id }}"
+                            {% if playlist.playlist_id|stringformat:"s" == selected_playlist_id %}selected{% endif %}>
+                        {{ playlist.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Select Tracks to Add</strong></label>
+                    <div class="form-check">
+                        {% for track in tracks %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="track_ids"
+                                       value="{{ track.track_id }}"
+                                       id="track{{ track.track_id }}">
+                                <label class="form-check-label" for="track{{ track.track_id }}">
+                                    {{ track.name }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                        {% if tracks|length == 0 %}
+                            <div class="alert alert-info mt-2">No tracks available.</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-4 justify-content-center">
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Add Tracks</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
