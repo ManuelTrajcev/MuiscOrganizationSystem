@@ -81,15 +81,22 @@
         </li>
         <li class="nav-item">
             <a href="{% url 'batch_update_reports_to' %}"
-               class="nav-link {% if request.path == 'employee/batch-update-reports-to/' %}active{% endif %}">
+               class="nav-link {% if request.path == '/employee/batch-update-reports-to/' %}active{% endif %}">
                 Update manager
             </a>
         </li>
        <li class="nav-item">
             <a href="{% url 'add_tracks_to_playlist' %}"
-               class="nav-link {% if request.path == 'playlists/add-tracks/' %}active{% endif %}">
+               class="nav-link {% if request.path == '/playlists/add-tracks/' %}active{% endif %}">
                 Add tracks to playlist
             </a>
         </li>
+         <li class="nav-item">
+            <a href="{% url 'add_invoice_lines_to_invoice' %}"
+               class="nav-link {% if request.path == '/invoices/add-lines/' %}active{% endif %}">
+                Add invoice lines
+            </a>
+        </li>
     </ul>
+
 </div>

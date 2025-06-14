@@ -17,8 +17,10 @@ from music.models import *
 def home_page(request):
     return render(request, 'home.html')
 
+
 def redirect_to_home(request, exception):
     return redirect('home_page')
+
 
 ## LIST OF ALL ##
 def album_list(request):
@@ -145,6 +147,7 @@ def genres_per_customer(request):
         'selected_customer_id': selected_customer_id,
     })
 
+
 def most_popular_artist_per_customer_per_genre(request):
     customers = Customer.objects.all()
     selected_customer_id = request.GET.get('customer_id')
@@ -243,13 +246,16 @@ def invoice_per_customer_after_date(request):
         'selected_customer_id': selected_customer_id,
     })
 
+
 from django.shortcuts import render, redirect
 from music.models import Employee
 from django.contrib import messages
 
+
 def batch_update_reports_to(request):
     selected_manager_id = request.POST.get('manager_id') or request.GET.get('manager_id')
-    employees = Employee.objects.exclude(employee_id=selected_manager_id) if selected_manager_id else Employee.objects.all()
+    employees = Employee.objects.exclude(
+        employee_id=selected_manager_id) if selected_manager_id else Employee.objects.all()
 
     if request.method == 'POST':
         selected_employee_ids = request.POST.getlist('employee_ids')
@@ -274,6 +280,7 @@ def batch_update_reports_to(request):
         'all_employees': all_employees,
         'selected_manager_id': selected_manager_id
     })
+
 
 def add_tracks_to_playlist(request):
     playlists = Playlist.objects.all()
@@ -301,4 +308,40 @@ def add_tracks_to_playlist(request):
         'playlists': playlists,
         'tracks': tracks,
         'selected_playlist_id': selected_playlist_id
+    })
+
+
+def add_invoice_lines_to_invoice(request):
+    invoices = Invoice.objects.all()
+    tracks = Track.objects.all()
+    selected_invoice_id = request.POST.get('invoice_id') or request.GET.get('invoice_id')
+
+    if request.method == 'POST':
+        selected_track_ids = request.POST.getlist('track_ids')
+        quantities = request.POST.getlist('quantities')
+
+        if selected_invoice_id and selected_track_ids and quantities:
+            try:
+                invoice_lines = []
+                for i in range(len(selected_track_ids)):
+                    track_id = int(selected_track_ids[i])
+                    quantity = int(quantities[i])
+                    invoice_lines.append({'track_id': track_id, 'quantity': quantity})
+
+                json_data = json.dumps(invoice_lines)
+
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT add_invoice_lines_to_existing_invoice(%s, %s::json);",
+                                   [selected_invoice_id, json_data])
+
+                messages.success(request, "Invoice lines added successfully.")
+                return redirect('add_invoice_lines_to_invoice')
+
+            except Exception as e:
+                messages.error(request, f"Error adding invoice lines: {e}")
+
+    return render(request, 'add_invoice_lines_to_invoice.html', {
+        'invoices': invoices,
+        'tracks': tracks,
+        'selected_invoice_id': selected_invoice_id
     })
