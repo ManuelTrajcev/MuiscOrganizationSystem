@@ -283,8 +283,16 @@ def batch_update_reports_to(request):
 
 
 def add_tracks_to_playlist(request):
+    search_track = request.GET.get('search_track', '').strip()
+
+    invoices = Invoice.objects.all()
+
+    if search_track:
+        tracks = Track.objects.filter(name__icontains=search_track)
+    else:
+        tracks = Track.objects.all()
+
     playlists = Playlist.objects.all()
-    tracks = Track.objects.all()
     selected_playlist_id = request.POST.get('playlist_id') or request.GET.get('playlist_id')
 
     if request.method == 'POST':
@@ -307,13 +315,21 @@ def add_tracks_to_playlist(request):
     return render(request, 'add_tracks_to_playlist.html', {
         'playlists': playlists,
         'tracks': tracks,
-        'selected_playlist_id': selected_playlist_id
+        'selected_playlist_id': selected_playlist_id,
+        'search_track': search_track,
     })
 
 
 def add_invoice_lines_to_invoice(request):
+    search_track = request.GET.get('search_track', '').strip()
+
     invoices = Invoice.objects.all()
-    tracks = Track.objects.all()
+
+    if search_track:
+        tracks = Track.objects.filter(name__icontains=search_track)
+    else:
+        tracks = Track.objects.all()
+
     selected_invoice_id = request.POST.get('invoice_id') or request.GET.get('invoice_id')
 
     if request.method == 'POST':
@@ -343,5 +359,6 @@ def add_invoice_lines_to_invoice(request):
     return render(request, 'add_invoice_lines_to_invoice.html', {
         'invoices': invoices,
         'tracks': tracks,
-        'selected_invoice_id': selected_invoice_id
+        'selected_invoice_id': selected_invoice_id,
+        'search_track': search_track,
     })
