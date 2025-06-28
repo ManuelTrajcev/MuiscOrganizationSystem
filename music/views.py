@@ -24,22 +24,43 @@ def redirect_to_home(request, exception):
 
 ## LIST OF ALL ##
 def album_list(request):
+    search_track = request.GET.get('search_track', '').strip()
+
+    if search_track:
+        data = Album.objects.filter(title__icontains=search_track).values_list('title', flat=True)
+    else:
+        data = Album.objects.all().values_list('title', flat=True)
+
     heading = request.GET.get('model', 'All Albums')
-    data = Album.objects.values_list('title', flat=True)
-    return render(request, 'list.html', {'data': data, 'heading': heading})
+    return render(request, 'list.html', {
+        'data': data,
+        'heading': heading,
+        'search_track': search_track,
+    })
 
 
 def track_list(request):
+    search_track = request.GET.get('search_track', '').strip()
+
+    if search_track:
+        data = Track.objects.filter(name__icontains=search_track).values_list('name', flat=True)
+    else:
+        data = Track.objects.all().values_list('name', flat=True)
+
     heading = request.GET.get('model', 'All Tracks')
-    data = Track.objects.values_list('name', flat=True)
-    return render(request, 'list.html', {'data': data, 'heading': heading})
+    return render(request, 'list.html', {'data': data, 'heading': heading, 'search_track': search_track, })
 
 
 def artist_list(request):
-    heading = request.GET.get('model', 'All Artists')
-    data = Artist.objects.values_list('name', flat=True)
+    search_track = request.GET.get('search_track', '').strip()
 
-    return render(request, 'list.html', {'data': data, 'heading': heading})
+    if search_track:
+        data = Artist.objects.filter(name__icontains=search_track).values_list('name', flat=True)
+    else:
+        data = Artist.objects.all().values_list('name', flat=True)
+    heading = request.GET.get('model', 'All Artists')
+
+    return render(request, 'list.html', {'data': data, 'heading': heading, 'search_track': search_track, })
 
 
 ## VIEWS ##
@@ -74,23 +95,33 @@ def rank_list_most_active_customers(request):
 
 
 def avg_price_per_artist(request):
+    search_track = request.GET.get('search_track', '').strip()
+
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM avg_price_per_artist;")
         rows = cursor.fetchall()
 
+    if search_track:
+        rows = [row for row in rows if search_track.lower() in row[0].lower()]
+
     data = [{'name': row[0], 'avg_price_per_track': row[1]} for row in rows]
 
-    return render(request, 'avg_price_per_artist.html', {'data': data})
+    return render(request, 'avg_price_per_artist.html', {'data': data, 'search_track': search_track})
 
 
 def rank_list_artists(request):
+    search_track = request.GET.get('search_track', '').strip()
+
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM rank_list_artists;")
         rows = cursor.fetchall()
 
+    if search_track:
+        rows = [row for row in rows if search_track.lower() in row[0].lower()]
+
     data = [{'name': row[0], 'num_invoices': row[1], 'money_earned': row[2]} for row in rows]
 
-    return render(request, 'rank_list_artists.html', {'data': data})
+    return render(request, 'rank_list_artists.html', {'data': data, 'search_track': search_track})
 
 
 def media_type_percentage(request):
@@ -323,7 +354,7 @@ def add_tracks_to_playlist(request):
 def add_invoice_lines_to_invoice(request):
     search_track = request.GET.get('search_track', '').strip()
 
-    invoices = Invoice.objects.all()
+    invoices = Invoice.objects.all().order_by('invoice_id')
 
     if search_track:
         tracks = Track.objects.filter(name__icontains=search_track)

@@ -24,11 +24,20 @@
             No data available.
         </div>
     {% else %}
+        <form method="get" class="mb-3">
+            {% csrf_token %}
+            <input type="hidden" name="invoice_id" value="{{ selected_invoice_id }}">
+            <div class="input-group">
+                <input type="text" name="search_track" class="form-control" placeholder="Search artists"
+                       value="{{ search_track }}">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </form>
         <ul class="list-group">
             {% for row in data %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div class="col-6">
-                       {{ row.name }}
+                        {{ row.name }}
                     </div>
                     <div class="col-6 text-end">
                         {% if row.avg_price_per_track == 'not enogu data' %}

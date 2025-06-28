@@ -9,21 +9,29 @@
     <title>{{ heading }}</title>
 </head>
 <body class="d-flex bg-light">
-    {% include 'sidebar.html' %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">{{ heading }}</h1>
-
-        <div class="list-group">
-            {% for d in data %}
-                <a href="#" class="list-group-item list-group-item-action">
-                    {{ d }}
-                </a>
-            {% empty %}
-                <div class="alert alert-warning" role="alert">
-                    No data found.
-                </div>
-            {% endfor %}
+{% include 'sidebar.html' %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{{ heading }}</h1>
+    <form method="get" class="mb-3">
+        {% csrf_token %}
+        <input type="hidden" name="invoice_id" value="{{ selected_invoice_id }}">
+        <div class="input-group">
+            <input type="text" name="search_track" class="form-control" placeholder="Search"
+                   value="{{ search_track }}">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
         </div>
+    </form>
+    <div class="list-group">
+        {% for d in data %}
+            <a href="#" class="list-group-item list-group-item-action">
+                {{ d }}
+            </a>
+        {% empty %}
+            <div class="alert alert-warning" role="alert">
+                No data found.
+            </div>
+        {% endfor %}
     </div>
+</div>
 </body>
 </html>

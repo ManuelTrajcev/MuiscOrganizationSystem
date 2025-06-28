@@ -13,6 +13,16 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Artist with Highest Earnings</h1>
 
+    <form method="get" class="mb-3">
+        {% csrf_token %}
+        <input type="hidden" name="invoice_id" value="{{ selected_invoice_id }}">
+        <div class="input-group">
+            <input type="text" name="search_track" class="form-control" placeholder="Search artists"
+                   value="{{ search_track }}">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+    </form>
+
     <div class="list-group">
         <div class="row">
             <div class="col-4 font-weight-bold"><strong>Name</strong></div>
