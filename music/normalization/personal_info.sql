@@ -71,3 +71,47 @@ RENAME COLUMN postalcode TO postal_code;
 
 SELECT *
 FROM employee
+
+CREATE TABLE Contact (
+    contact_id INT PRIMARY KEY,
+    phone VARCHAR(50),
+    fax VARCHAR(50),
+    email VARCHAR(100)
+);
+
+INSERT INTO Contact (contact_id, phone, fax, email)
+SELECT
+    personal_info_id,
+    Phone,
+    Fax,
+    Email
+FROM personalinfo;
+
+ALTER TABLE Employee
+ADD contact_id INT;
+
+UPDATE Employee
+SET contact_id = employee.personal_info_id
+where employee.personal_info_id IS NOT  NULL;
+
+ALTER TABLE Employee
+ADD CONSTRAINT FK_Employee_Contact FOREIGN KEY (contact_id)
+REFERENCES Contact(contact_id);
+
+ALTER TABLE Customer
+ADD contact_id INT;
+
+UPDATE Customer
+SET contact_id = customer.personal_info_id
+where customer.personal_info_id IS NOT  NULL;
+
+ALTER TABLE Customer
+ADD CONSTRAINT FK_Customer_Contact FOREIGN KEY (contact_id)
+REFERENCES Contact(contact_id);
+
+ALTER TABLE personalinfo
+DROP COLUMN fax,
+DROP COLUMN phone,
+DROP COLUMN email;
+
+ALTER TABLE personalinfo RENAME TO address_info;
