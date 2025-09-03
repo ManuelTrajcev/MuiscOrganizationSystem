@@ -98,6 +98,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{% url 'create_playlist' %}"
+               class="nav-link {% if request.path == '/playlists/create/' %}active{% endif %}">
+                Create playlist
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{% url 'create_invoice' %}"
                class="nav-link {% if request.path == '/invoices/create/' %}active{% endif %}">
                 Create invoice

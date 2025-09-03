@@ -460,3 +460,12 @@ def create_customer(request):
         return redirect("create_customer")
 
     return render(request, "create_customer.html", {"employees": employees})
+
+
+def create_playlist(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        if name:
+            Playlist.objects.create(name=name)
+            return redirect("create_playlist")
+    return render(request, "create_playlist.html")

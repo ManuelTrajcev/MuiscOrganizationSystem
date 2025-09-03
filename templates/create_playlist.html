@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+          crossorigin="anonymous">
+    <title>Create Playlist</title>
+</head>
+<body class="d-flex bg-light">
+{% include 'sidebar.html' %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Create New Playlist</h1>
+
+    <form method="post" class="card p-4 shadow-sm bg-white">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label"><strong>Playlist Name</strong></label>
+            <input type="text" class="form-control" name="name" placeholder="Enter playlist name" required>
+        </div>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Create Playlist</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
