@@ -1,18 +1,3 @@
---ADDING DELETED_AT COLUMN
-DO $$
-DECLARE
-    r RECORD;
-BEGIN
-    FOR r IN
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_schema = 'public'
-          AND table_type = 'BASE TABLE'
-    LOOP
-        EXECUTE format('ALTER TABLE public.%I ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP;', r.table_name);
-    END LOOP;
-END $$;
-
 --SOFT DELETE TRIGGER
 DO $$
 DECLARE
@@ -50,7 +35,7 @@ BEGIN
                  RETURN NULL;
              END;
              $func$ LANGUAGE plpgsql;',
-            r.table_name, r.table_name, r.table_name, pk_col
+            r.table_name, r.table_name, pk_col, pk_col
         );
 
         EXECUTE format(
@@ -63,4 +48,3 @@ BEGIN
         );
     END LOOP;
 END $$;
-

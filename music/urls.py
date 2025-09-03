@@ -27,5 +27,5 @@ urlpatterns = [
     path('invoices/add-lines/', views.add_invoice_lines_to_invoice, name='add_invoice_lines_to_invoice'),
     path('invoices/create/', views.create_invoice, name='create_invoice'),
     path('customer/create/', views.create_customer, name='create_customer'),
-
+    path("delete-records/", views.delete_records, name="delete_records"),
 ]

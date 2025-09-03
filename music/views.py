@@ -27,9 +27,14 @@ def album_list(request):
     search_track = request.GET.get('search_track', '').strip()
 
     if search_track:
-        data = Album.objects.filter(title__icontains=search_track).values_list('title', flat=True)
+        data = Album.objects.filter(
+            title__icontains=search_track,
+            deleted_at__isnull=True
+        ).values_list('title', flat=True)
     else:
-        data = Album.objects.all().values_list('title', flat=True)
+        data = Album.objects.filter(
+            deleted_at__isnull=True
+        ).values_list('title', flat=True)
 
     heading = request.GET.get('model', 'All Albums')
     return render(request, 'list.html', {
@@ -43,9 +48,14 @@ def track_list(request):
     search_track = request.GET.get('search_track', '').strip()
 
     if search_track:
-        data = Track.objects.filter(name__icontains=search_track).values_list('name', flat=True)
+        data = Track.objects.filter(
+            name__icontains=search_track,
+            deleted_at__isnull=True
+        ).values_list('name', flat=True)
     else:
-        data = Track.objects.all().values_list('name', flat=True)
+        data = Track.objects.filter(
+            deleted_at__isnull=True
+        ).values_list('name', flat=True)
 
     heading = request.GET.get('model', 'All Tracks')
     return render(request, 'list.html', {'data': data, 'heading': heading, 'search_track': search_track, })
@@ -55,9 +65,15 @@ def artist_list(request):
     search_track = request.GET.get('search_track', '').strip()
 
     if search_track:
-        data = Artist.objects.filter(name__icontains=search_track).values_list('name', flat=True)
+        data = Artist.objects.filter(
+            name__icontains=search_track,
+            deleted_at__isnull=True
+        ).values_list('name', flat=True)
     else:
-        data = Artist.objects.all().values_list('name', flat=True)
+        data = Artist.objects.filter(
+            deleted_at__isnull=True
+        ).values_list('name', flat=True)
+
     heading = request.GET.get('model', 'All Artists')
 
     return render(request, 'list.html', {'data': data, 'heading': heading, 'search_track': search_track, })
@@ -469,3 +485,55 @@ def create_playlist(request):
             Playlist.objects.create(name=name)
             return redirect("create_playlist")
     return render(request, "create_playlist.html")
+
+def list_tables():
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema='public'
+              AND table_type='BASE TABLE';
+        """)
+        return [row[0] for row in cursor.fetchall()]
+
+def delete_records(request):
+    tables = list_tables()
+    selected_table = request.GET.get("table") or request.POST.get("table")
+    search_query = request.GET.get("search", "").strip()
+    rows, cols = [], []
+
+    if selected_table:
+        with connection.cursor() as cursor:
+            # Get column names
+            cursor.execute(f"SELECT * FROM {selected_table} WHERE deleted_at IS NULL;")
+            cols = [desc[0] for desc in cursor.description]
+
+            if search_query:
+                conditions = " OR ".join([f"CAST({col} AS TEXT) ILIKE %s" for col in cols])
+                params = [f"%{search_query}%"] * len(cols)
+                cursor.execute(f"SELECT * FROM {selected_table} WHERE {conditions} AND deleted_at IS NULL;", params)
+            else:
+                cursor.execute(f"SELECT * FROM {selected_table} WHERE deleted_at IS NULL;")
+
+            rows = [dict(zip(cols, r)) for r in cursor.fetchall()]
+
+        for row in rows:
+            row["pk"] = row[cols[0]]
+
+    if request.method == "POST" and selected_table:
+        ids = request.POST.getlist("record_ids")
+        if ids:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"DELETE FROM {selected_table} WHERE {cols[0]} IN %s;",
+                    (tuple(ids),)
+                )
+        return redirect("delete_records")
+
+    return render(request, "delete_records.html", {
+        "tables": tables,
+        "selected_table": selected_table,
+        "rows": rows,
+        "cols": cols if selected_table else [],
+        "search_query": search_query,
+    })

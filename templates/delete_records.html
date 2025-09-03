@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Records</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex bg-light">
+{% include 'sidebar.html' %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Delete Records</h1>
+
+    <!-- Select Table -->
+    <form method="get" class="mb-3">
+        <label for="table" class="form-label"><strong>Select Table</strong></label>
+        <select name="table" id="table" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Choose Table --</option>
+            {% for table in tables %}
+                <option value="{{ table }}" {% if table == selected_table %}selected{% endif %}>
+                    {{ table }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+   {% if selected_table %}
+    <!-- Search bar -->
+    <form method="get" class="mb-3">
+        <input type="hidden" name="table" value="{{ selected_table }}">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search"
+                   value="{{ search_query }}">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <form method="post" class="card p-4 shadow-sm bg-white">
+        {% csrf_token %}
+        <input type="hidden" name="table" value="{{ selected_table }}">
+
+        <h5 class="mb-3">Records from {{ selected_table }}</h5>
+
+        {% if rows %}
+            {% for row in rows %}
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" name="record_ids" value="{{ row.pk }}">
+                    <label class="form-check-label">
+                        {{ row }}
+                    </label>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">No records found.</div>
+        {% endif %}
+
+        <div class="d-grid mt-3">
+            <button type="submit" class="btn btn-danger">Delete Selected</button>
+        </div>
+    </form>
+{% endif %}
+
+</div>
+</body>
+</html>
