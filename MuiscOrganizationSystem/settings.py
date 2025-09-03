@@ -79,15 +79,15 @@ DATABASES = {
         # "NAME": BASE_DIR / "db.sqlite3",
         'ENGINE': 'django.db.backends.postgresql',
 
-        'NAME': 'chinook',
+        'NAME': 'db_202425z_va_prj_mpms',
 
-        'USER': 'postgres',
+        'USER': 'db_202425z_va_prj_mpms_owner',
 
-        'PASSWORD': 'postgres',
+        'PASSWORD': 'a225db474891',
 
         'HOST': 'localhost',
 
-        'PORT': '5432',
+        'PORT': '7777',
     }
 }
 

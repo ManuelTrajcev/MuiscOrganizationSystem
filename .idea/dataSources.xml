@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/chinook</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="db_202425z_va_prj_mpms@localhost" uuid="a8508e1f-ae0a-4987-9e76-ca293daf4b79">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:7777/db_202425z_va_prj_mpms</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

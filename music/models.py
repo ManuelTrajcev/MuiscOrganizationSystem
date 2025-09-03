@@ -43,20 +43,7 @@ class Employee(models.Model):
         db_table = 'employee'
 
 
-class Customer(models.Model):
-    customer_id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=40)
-    last_name = models.CharField(max_length=20)
-    company = models.CharField(max_length=80, blank=True, null=True)
-    support_rep = models.ForeignKey(Employee, on_delete=models.SET_NULL, blank=True, null=True,
-                                    db_column='support_rep_id')
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
-    class Meta:
-        db_table = 'customer'
 
 
 class Genre(models.Model):
@@ -99,39 +86,6 @@ class Track(models.Model):
 
     class Meta:
         db_table = 'track'
-
-
-class Invoice(models.Model):
-    invoice_id = models.AutoField(primary_key=True)
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, db_column='customer_id', null=True)
-    invoice_date = models.DateTimeField()
-    billing_address = models.CharField(max_length=70, blank=True, null=True)
-    billing_city = models.CharField(max_length=40, blank=True, null=True)
-    billing_state = models.CharField(max_length=40, blank=True, null=True)
-    billing_country = models.CharField(max_length=40, blank=True, null=True)
-    billing_postal_code = models.CharField(max_length=10, blank=True, null=True)
-    total = models.DecimalField(max_digits=10, decimal_places=2)
-    deleted_at = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return f"Invoice #{self.invoice_id}"
-
-    class Meta:
-        db_table = 'invoice'
-        managed = False
-
-
-class InvoiceLine(models.Model):
-    invoice_line_id = models.AutoField(primary_key=True)
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, db_column='invoice_id')
-    track = models.ForeignKey(Track, on_delete=models.CASCADE, db_column='track_id')
-    quantity = models.IntegerField()
-    deleted_at = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        db_table = 'invoice_line'
-        managed = False
-
 
 class Playlist(models.Model):
     playlist_id = models.AutoField(primary_key=True)
@@ -191,17 +145,79 @@ class Price(models.Model):
         return f"{self.track_id} - {self.value} - {self.date}"
 
 
-class PersonalInfo(models.Model):
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name='personalinfo')
-    address = models.CharField(max_length=255)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100, blank=True, null=True)
-    country = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=20, blank=True, null=True)
-    phone = models.CharField(max_length=20, blank=True, null=True)
+class Contact(models.Model):
+    contact_id = models.AutoField(primary_key=True)
+    phone = models.CharField(max_length=50, blank=True, null=True)
+    fax = models.CharField(max_length=50, blank=True, null=True)
+    email = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.email or self.phone}"
 
     class Meta:
+        db_table = 'contact'
         managed = False
-        db_table = 'personalinfo'
+
+
+class AddressInfo(models.Model):
+    personal_info_id = models.AutoField(primary_key=True)
+    address = models.TextField(blank=True, null=True)
+    city = models.TextField(blank=True, null=True)
+    state = models.TextField(blank=True, null=True)
+    country = models.TextField(blank=True, null=True)
+    postal_code = models.TextField(blank=True, null=True)
+
     def __str__(self):
-        return f"Personal info for {self.customer.first_name} {self.customer.last_name}"
+        return f"{self.address}, {self.city}"
+
+    class Meta:
+        db_table = 'address_info'
+        managed = False
+
+
+class Customer(models.Model):
+    customer_id = models.AutoField(primary_key=True)
+    first_name = models.CharField(max_length=40)
+    last_name = models.CharField(max_length=20)
+    company = models.CharField(max_length=80, blank=True, null=True)
+    support_rep = models.ForeignKey(Employee, on_delete=models.SET_NULL, blank=True, null=True,
+                                    db_column='support_rep_id')
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    address_info = models.OneToOneField(AddressInfo, on_delete=models.CASCADE)
+    contact = models.OneToOneField(Contact, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    class Meta:
+        db_table = 'customer'
+
+class Invoice(models.Model):
+    invoice_id = models.AutoField(primary_key=True)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, db_column='customer_id', null=True)
+    invoice_date = models.DateTimeField()
+    billing_address = models.CharField(max_length=70, blank=True, null=True)
+    billing_city = models.CharField(max_length=40, blank=True, null=True)
+    billing_state = models.CharField(max_length=40, blank=True, null=True)
+    billing_country = models.CharField(max_length=40, blank=True, null=True)
+    billing_postal_code = models.CharField(max_length=10, blank=True, null=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Invoice #{self.invoice_id}"
+
+    class Meta:
+        db_table = 'invoice'
+        managed = False
+
+class InvoiceLine(models.Model):
+    invoice_line_id = models.AutoField(primary_key=True)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, db_column='invoice_id')
+    track = models.ForeignKey(Track, on_delete=models.CASCADE, db_column='track_id')
+    quantity = models.IntegerField()
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'invoice_line'
+        managed = False

@@ -13,6 +13,8 @@ ON DELETE SET DEFAULT;
 
 SELECT setval(pg_get_serial_sequence('invoice_line', 'invoice_line_id'), (SELECT MAX(invoice_line_id) FROM invoice_line));
 
+SELECT setval(pg_get_serial_sequence('invoice_line', 'invoice'), (SELECT MAX(invoice) FROM invoice));
+
 SELECT setval(pg_get_serial_sequence('playlist_track', 'id'), (SELECT MAX(id) FROM playlist_track));
 
 SELECT setval(pg_get_serial_sequence('playlist', 'playlist_id'), (SELECT MAX(playlist_id) FROM playlist));
@@ -31,4 +33,7 @@ SELECT setval(pg_get_serial_sequence('customer', 'customer_id'), (SELECT MAX(cus
 
 SELECT setval(pg_get_serial_sequence('employee', 'employee_id'), (SELECT MAX(employee_id) FROM employee));
 
+SELECT setval(pg_get_serial_sequence('invoice', 'invoice_id'), (SELECT MAX(invoice_id) FROM invoice));
 
+
+SELECT setval(pg_get_serial_sequence('contact', 'contact_id'), (SELECT MAX(contact_id) FROM contact));

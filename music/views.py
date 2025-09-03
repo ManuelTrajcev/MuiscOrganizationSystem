@@ -5,7 +5,7 @@ import os
 import django
 from django.db import connection
 from django.shortcuts import redirect
-
+from django.utils import timezone
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MuiscOrganizationSystem.settings')
 django.setup()
 
@@ -393,3 +393,70 @@ def add_invoice_lines_to_invoice(request):
         'selected_invoice_id': selected_invoice_id,
         'search_track': search_track,
     })
+
+
+def create_invoice(request):
+    customers = Customer.objects.all()
+
+    if request.method == "POST":
+        customer_id = request.POST.get("customer_id")
+        billing_address = request.POST.get("billing_address")
+        billing_city = request.POST.get("billing_city")
+        billing_country = request.POST.get("billing_country")
+        billing_postal_code = request.POST.get("billing_postal_code")
+        billing_state = request.POST.get("billing_state")
+
+        # You may want to add validation here
+        if customer_id and billing_address and billing_city and billing_country:
+            invoice = Invoice.objects.create(
+                customer_id=customer_id,
+                invoice_date=timezone.now(),
+                billing_address=billing_address,
+                billing_city=billing_city,
+                billing_state=billing_state,
+                billing_country=billing_country,
+                billing_postal_code=billing_postal_code,
+                total=0
+            )
+            return redirect("create_invoice")
+            # or redirect to invoice list page
+
+    return render(request, "create_invoice.html", {"customers": customers})
+
+
+def create_customer(request):
+    employees = Employee.objects.all()
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        company = request.POST.get("company")
+        support_rep_id = request.POST.get("support_rep_id")
+
+        phone = request.POST.get("phone")
+        fax = request.POST.get("fax")
+        email = request.POST.get("email")
+
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        state = request.POST.get("state")
+        country = request.POST.get("country")
+        postalcode = request.POST.get("postalcode")
+
+        contact = Contact.objects.create(phone=phone, fax=fax, email=email)
+        address_info = AddressInfo.objects.create(
+            address=address, city=city, state=state, country=country, postal_code=postalcode
+        )
+
+        Customer.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            company=company,
+            support_rep_id=support_rep_id if support_rep_id else None,
+            contact=contact,
+            address_info=address_info
+        )
+
+        return redirect("create_customer")
+
+    return render(request, "create_customer.html", {"employees": employees})

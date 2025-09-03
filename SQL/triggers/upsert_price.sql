@@ -23,5 +23,3 @@ CREATE TRIGGER trg_upsert_price
 BEFORE INSERT ON Price
 FOR EACH ROW
 EXECUTE FUNCTION upsert_price();
-
-

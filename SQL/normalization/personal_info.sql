@@ -115,3 +115,19 @@ DROP COLUMN phone,
 DROP COLUMN email;
 
 ALTER TABLE personalinfo RENAME TO address_info;
+
+
+-- PRICE TABLE
+CREATE TABLE price (
+    price_id SERIAL PRIMARY KEY,
+    value NUMERIC(10,2) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    track_id INT NOT NULL
+);
+
+INSERT INTO price (value, date, track_id)
+SELECT
+    unit_price,
+    NOW(),
+    track_id
+FROM track;

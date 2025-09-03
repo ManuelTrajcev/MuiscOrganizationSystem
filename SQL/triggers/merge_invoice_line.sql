@@ -25,7 +25,3 @@ CREATE TRIGGER trg_merge_invoice_line
 BEFORE INSERT ON invoice_line
 FOR EACH ROW
 EXECUTE FUNCTION merge_invoice_line();
-
-
-
-

@@ -43,6 +43,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{% url 'create_customer' %}"
+                class="nav-link {% if request.path == '/customer/create' %}active{% endif %}">
+                Create Customer
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{% url 'rank_list_most_active_customers' %}"
                class="nav-link {% if request.path == '/customer/rank-list' %}active{% endif %}">
                 Rank List of Most Active Customers
@@ -85,13 +91,19 @@
                 Update manager
             </a>
         </li>
-       <li class="nav-item">
+        <li class="nav-item">
             <a href="{% url 'add_tracks_to_playlist' %}"
                class="nav-link {% if request.path == '/playlists/add-tracks/' %}active{% endif %}">
                 Add tracks to playlist
             </a>
         </li>
-         <li class="nav-item">
+        <li class="nav-item">
+            <a href="{% url 'create_invoice' %}"
+               class="nav-link {% if request.path == '/invoices/create/' %}active{% endif %}">
+                Create invoice
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{% url 'add_invoice_lines_to_invoice' %}"
                class="nav-link {% if request.path == '/invoices/add-lines/' %}active{% endif %}">
                 Add invoice lines

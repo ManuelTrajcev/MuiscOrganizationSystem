@@ -24,5 +24,7 @@ urlpatterns = [
     path('employee/batch-update-reports-to/', views.batch_update_reports_to, name='batch_update_reports_to'),
     path('playlists/add-tracks/', views.add_tracks_to_playlist, name='add_tracks_to_playlist'),
     path('invoices/add-lines/', views.add_invoice_lines_to_invoice, name='add_invoice_lines_to_invoice'),
+    path('invoices/create/', views.create_invoice, name='create_invoice'),
+    path('customer/create/', views.create_customer, name='create_customer'),
 
 ]
