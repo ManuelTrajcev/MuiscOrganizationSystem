@@ -7,5 +7,6 @@ FROM artist ar
          LEFT JOIN track tr ON al.album_id = tr.album_id
          LEFT JOIN invoice_line il ON tr.track_id = il.track_id
          LEFT JOIN invoice i on il.invoice_id = i.invoice_id
+where ar.deleted_at is null
 GROUP BY ar.name
 ORDER BY money_earned DESC;

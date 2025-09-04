@@ -73,7 +73,3 @@ SELECT setval(pg_get_serial_sequence('invoice', 'invoice_id'), (SELECT MAX(invoi
 SELECT setval(pg_get_serial_sequence('contact', 'contact_id'), (SELECT MAX(contact_id) FROM contact));
 
 SELECT setval(pg_get_serial_sequence('playlist', 'playlist_id'), (SELECT MAX(playlist_id) FROM playlist));
-
-
-
-

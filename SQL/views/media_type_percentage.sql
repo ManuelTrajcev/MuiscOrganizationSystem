@@ -8,5 +8,6 @@ SELECT mt.name                                          as media_type,
 FROM media_type mt
          left join track tr on mt.media_type_id = tr.media_type_id
          cross join cte
+where tr.deleted_at is null and  mt.deleted_at is null
 group by mt.media_type_id, mt.name, cte.total
 order by percentage desc

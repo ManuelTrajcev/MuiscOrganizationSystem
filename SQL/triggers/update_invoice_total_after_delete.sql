@@ -18,3 +18,9 @@ BEGIN
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_update_invoice_total_after_delete
+AFTER INSERT ON invoice_line
+FOR EACH ROW
+EXECUTE FUNCTION update_invoice_total_after_delete();

@@ -3,5 +3,6 @@ SELECT ar.name as artist_name, concat(ceil(avg(milliseconds) / 1000), 's') as av
 FROM artist ar
 left join album al on ar.artist_id = al.album_id
 left join track tr on al.album_id = tr.album_id
+where ar.deleted_at is null
 group by ar.name
 order by ar.name

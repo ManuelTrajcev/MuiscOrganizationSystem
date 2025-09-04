@@ -6,6 +6,7 @@ WITH genre_count AS
                    left join invoice_line il on i.invoice_id = il.invoice_id
                    left join track tr on il.track_id = tr.track_id
                    left join genre g on tr.genre_id = g.genre_id
+          where c.deleted_at is null
           group by c.customer_id, c.first_name, c.last_name, g.genre_id, g.name
           order by c.first_name, num_songs_per_genre desc),
      ranked_genres AS (SELECT *,
