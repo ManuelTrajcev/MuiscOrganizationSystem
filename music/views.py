@@ -6,6 +6,7 @@ import django
 from django.db import connection
 from django.shortcuts import redirect
 from django.utils import timezone
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MuiscOrganizationSystem.settings')
 django.setup()
 
@@ -171,21 +172,53 @@ def genres_per_customer(request):
     if selected_customer_id:
         customer = Customer.objects.filter(customer_id=selected_customer_id).first()
         query = """
-            SELECT c.first_name as first_name, c.last_name as last_name, g.name as genre, COUNT(tr.track_id) as track_count
-            FROM customer c
-            LEFT JOIN invoice i ON c.customer_id = i.customer_id
-            LEFT JOIN invoice_line il ON i.invoice_id = il.invoice_id
-            LEFT JOIN track tr ON il.track_id = tr.track_id
-            LEFT JOIN genre g ON tr.genre_id = g.genre_id
-            WHERE c.customer_id = %s
-            GROUP BY c.customer_id, c.first_name, c.last_name, g.genre_id, g.name
-            ORDER BY c.first_name
+            WITH CustomerTracks AS (
+                SELECT
+                    c.customer_id,
+                    c.first_name,
+                    c.last_name,
+                    g.genre_id,
+                    g.name AS genre_name,
+                    tr.track_id
+                FROM customer c
+                LEFT JOIN invoice i ON c.customer_id = i.customer_id
+                LEFT JOIN invoice_line il ON i.invoice_id = il.invoice_id
+                LEFT JOIN track tr ON il.track_id = tr.track_id
+                LEFT JOIN genre g ON tr.genre_id = g.genre_id
+                WHERE c.customer_id = %s
+            ),
+            GenreCounts AS (
+                SELECT
+                    customer_id,
+                    first_name,
+                    last_name,
+                    genre_id,
+                    genre_name,
+                    COUNT(track_id) AS track_count
+                FROM CustomerTracks
+                GROUP BY customer_id, first_name, last_name, genre_id, genre_name
+            )
+            SELECT
+                first_name,
+                last_name,
+                genre_name,
+                track_count
+            FROM GenreCounts
+            ORDER BY first_name, genre_name;
         """
 
         with connection.cursor() as cursor:
             cursor.execute(query, [selected_customer_id])
             rows = cursor.fetchall()
-            data = [{'first_name': row[0], 'last_name': row[1], 'genre': row[2], 'track_count': row[3]} for row in rows]
+            data = [
+                {
+                    'first_name': row[0],
+                    'last_name': row[1],
+                    'genre': row[2],
+                    'track_count': row[3]
+                }
+                for row in rows
+            ]
 
     return render(request, 'genres_per_customer.html', {
         'customers': customers,
@@ -244,53 +277,70 @@ def most_popular_artist_per_customer_per_genre(request):
 def invoice_per_customer_after_date(request):
     customers = Customer.objects.all()
     selected_customer_id = request.GET.get('customer_id')
-    selected_date = request.GET.get('invoice_date', '2000-01-01')
+    selected_date = request.GET.get('invoice_date')
+
+    # normalize empty or None date
+    if not selected_date:
+        selected_date = '2000-01-01'
+
     data = []
-    sum = 0
+    total_sum = 0
     customer = None
 
     if selected_customer_id:
         customer = Customer.objects.filter(customer_id=selected_customer_id).first()
-        if selected_date:
-            query = """
-                SELECT c.first_name, c.last_name, i.invoice_date::date, i.total
+
+        query = """
+            WITH CustomerInvoices AS (
+                SELECT 
+                    c.customer_id,
+                    c.first_name,
+                    c.last_name,
+                    i.invoice_date::date AS invoice_date,
+                    i.total
                 FROM customer c
                 JOIN invoice i ON c.customer_id = i.customer_id
-                WHERE c.customer_id = %s AND i.invoice_date > %s
-                ORDER BY i.invoice_date
-            """
-            with connection.cursor() as cursor:
-                cursor.execute(query, [selected_customer_id, selected_date])
-                rows = cursor.fetchall()
-                for r in rows:
-                    sum += r[3]
+                WHERE c.customer_id = %s
+                  AND i.invoice_date > %s
+            ),
+            InvoiceTotals AS (
+                SELECT customer_id, SUM(total) AS total_sum
+                FROM CustomerInvoices
+                GROUP BY customer_id
+            )
+            SELECT
+                ci.first_name,
+                ci.last_name,
+                ci.invoice_date,
+                ci.total,
+                it.total_sum
+            FROM CustomerInvoices ci
+            JOIN InvoiceTotals it ON ci.customer_id = it.customer_id
+            ORDER BY ci.invoice_date;
+        """
 
-                data = [{'first_name': row[0], 'last_name': row[1], 'invoice_date': row[2], 'total': row[3]} for row in
-                        rows]
-        else:
-            query = """
-                            SELECT c.first_name, c.last_name, i.invoice_date::date, i.total
-                            FROM customer c
-                            JOIN invoice i ON c.customer_id = i.customer_id
-                            WHERE c.customer_id = %s
-                            ORDER BY i.invoice_date
-                        """
-            with connection.cursor() as cursor:
-                cursor.execute(query, [selected_customer_id])
-                rows = cursor.fetchall()
-                for r in rows:
-                    sum += r[3]
-
-                data = [{'first_name': row[0], 'last_name': row[1], 'invoice_date': row[2], 'total': row[3]}
-                        for row in
-                        rows]
+        with connection.cursor() as cursor:
+            cursor.execute(query, [selected_customer_id, selected_date])
+            rows = cursor.fetchall()
+            if rows:
+                total_sum = rows[0][4]
+            data = [
+                {
+                    'first_name': row[0],
+                    'last_name': row[1],
+                    'invoice_date': row[2],
+                    'total': row[3]
+                }
+                for row in rows
+            ]
 
     return render(request, 'invoices_per_customer_after_date.html', {
         'customers': customers,
-        'total_sum': sum,
+        'total_sum': total_sum,
         'data': data,
         'customer': customer,
         'selected_customer_id': selected_customer_id,
+        'selected_date': selected_date,  # keep it in context if needed
     })
 
 
@@ -486,6 +536,7 @@ def create_playlist(request):
             return redirect("create_playlist")
     return render(request, "create_playlist.html")
 
+
 def list_tables():
     with connection.cursor() as cursor:
         cursor.execute("""
@@ -495,6 +546,7 @@ def list_tables():
               AND table_type='BASE TABLE';
         """)
         return [row[0] for row in cursor.fetchall()]
+
 
 def delete_records(request):
     tables = list_tables()
