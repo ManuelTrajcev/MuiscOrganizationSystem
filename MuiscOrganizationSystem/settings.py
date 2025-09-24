@@ -74,42 +74,42 @@ WSGI_APPLICATION = "MuiscOrganizationSystem.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # REMOTE DM
-DATABASES = {
-    "default": {
-        # "ENGINE": "django.db.backends.sqlite3",
-        # "NAME": BASE_DIR / "db.sqlite3",
-        'ENGINE': 'django.db.backends.postgresql',
-
-        'NAME': 'db_202425z_va_prj_mpms',
-
-        'USER': 'db_202425z_va_prj_mpms_owner',
-
-        'PASSWORD': 'a225db474891',
-
-        'HOST': 'localhost',
-
-        'PORT': '7777',
-    }
-}
-
-# LOCAL DB
 # DATABASES = {
 #     "default": {
 #         # "ENGINE": "django.db.backends.sqlite3",
 #         # "NAME": BASE_DIR / "db.sqlite3",
 #         'ENGINE': 'django.db.backends.postgresql',
 #
-#         'NAME': 'chinook',
+#         'NAME': 'db_202425z_va_prj_mpms',
 #
-#         'USER': 'postgres',
+#         'USER': 'db_202425z_va_prj_mpms_owner',
 #
-#         'PASSWORD': 'postgres',
+#         'PASSWORD': 'a225db474891',
 #
 #         'HOST': 'localhost',
 #
-#         'PORT': '5432',
+#         'PORT': '7777',
 #     }
 # }
+
+# LOCAL DB
+DATABASES = {
+    "default": {
+        # "ENGINE": "django.db.backends.sqlite3",
+        # "NAME": BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.postgresql',
+
+        'NAME': 'chinook',
+
+        'USER': 'postgres',
+
+        'PASSWORD': 'postgres',
+
+        'HOST': 'localhost',
+
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

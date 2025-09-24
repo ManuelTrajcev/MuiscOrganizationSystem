@@ -135,3 +135,83 @@ CREATE TABLE AddressInfo
     email           TEXT,
     CONSTRAINT address_info_pkey PRIMARY KEY (address_info_id)
 );
+
+ALTER TABLE album
+    ADD CONSTRAINT fk_album_artist FOREIGN KEY (artist_id)
+        REFERENCES artist(artist_id)
+        ON DELETE CASCADE;
+
+ALTER TABLE customer
+    ADD CONSTRAINT fk_customer_employee FOREIGN KEY (support_rep_id)
+        REFERENCES employee(employee_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE customer
+    ADD CONSTRAINT fk_customer_contact FOREIGN KEY (contact_id)
+        REFERENCES contact(contact_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE customer
+    ADD CONSTRAINT fk_customer_address FOREIGN KEY (address_info_id)
+        REFERENCES addressinfo(address_info_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE employee
+    ADD CONSTRAINT fk_employee_manager FOREIGN KEY (reports_to)
+        REFERENCES employee(employee_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE employee
+    ADD CONSTRAINT fk_employee_contact FOREIGN KEY (contact_id)
+        REFERENCES contact(contact_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE employee
+    ADD CONSTRAINT fk_employee_address FOREIGN KEY (address_info_id)
+        REFERENCES addressinfo(address_info_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE invoice
+    ADD CONSTRAINT fk_invoice_customer FOREIGN KEY (customer_id)
+        REFERENCES customer(customer_id)
+        ON DELETE CASCADE;
+
+ALTER TABLE invoice_line
+    ADD CONSTRAINT fk_invoice_line_invoice FOREIGN KEY (invoice_id)
+        REFERENCES invoice(invoice_id)
+        ON DELETE CASCADE;
+
+ALTER TABLE invoice_line
+    ADD CONSTRAINT fk_invoice_line_track FOREIGN KEY (track_id)
+        REFERENCES track(track_id)
+        ON DELETE CASCADE;
+
+ALTER TABLE track
+    ADD CONSTRAINT fk_track_album FOREIGN KEY (album_id)
+        REFERENCES album(album_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE track
+    ADD CONSTRAINT fk_track_media FOREIGN KEY (media_type_id)
+        REFERENCES media_type(media_type_id)
+        ON DELETE RESTRICT;
+
+ALTER TABLE track
+    ADD CONSTRAINT fk_track_genre FOREIGN KEY (genre_id)
+        REFERENCES genre(genre_id)
+        ON DELETE SET NULL;
+
+ALTER TABLE playlist_track
+    ADD CONSTRAINT fk_playlist_track_playlist FOREIGN KEY (playlist_id)
+        REFERENCES playlist(playlist_id)
+        ON DELETE CASCADE;
+
+ALTER TABLE playlist_track
+    ADD CONSTRAINT fk_playlist_track_track FOREIGN KEY (track_id)
+        REFERENCES track(track_id)
+        ON DELETE CASCADE;
+
+ALTER TABLE price
+    ADD CONSTRAINT fk_price_track FOREIGN KEY (track_id)
+        REFERENCES track(track_id)
+        ON DELETE CASCADE;
