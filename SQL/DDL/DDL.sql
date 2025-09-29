@@ -1,7 +1,7 @@
 CREATE TABLE album
 (
     album_id  INT          NOT NULL,
-    title     VARCHAR(160) NOT NULL,
+    album_title     VARCHAR(160) NOT NULL,
     artist_id INT          NOT NULL,
     CONSTRAINT album_pkey PRIMARY KEY (album_id)
 );
@@ -9,7 +9,7 @@ CREATE TABLE album
 CREATE TABLE artist
 (
     artist_id INT NOT NULL,
-    name      VARCHAR(120),
+    artist_name      VARCHAR(120),
     CONSTRAINT artist_pkey PRIMARY KEY (artist_id)
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE employee
 CREATE TABLE genre
 (
     genre_id INT NOT NULL,
-    name     VARCHAR(120),
+    genre_name     VARCHAR(120),
     CONSTRAINT genre_pkey PRIMARY KEY (genre_id)
 );
 
@@ -62,12 +62,11 @@ CREATE TABLE invoice
 
 CREATE TABLE invoice_line
 (
-    invoice_line_id INT            NOT NULL,
     invoice_id      INT            NOT NULL,
     track_id        INT            NOT NULL,
-    unit_price      NUMERIC(10, 2) NOT NULL,
     quantity        INT            NOT NULL,
-    CONSTRAINT invoice_line_pkey PRIMARY KEY (invoice_line_id)
+    unit_price    NUMERIC(10, 2) NOT NULL,
+    CONSTRAINT invoice_line_pkey PRIMARY KEY (invoice_id, track_id)
 );
 
 CREATE TABLE media_type
@@ -95,7 +94,7 @@ CREATE TABLE track
 (
     track_id      INT            NOT NULL,
     name          VARCHAR(200)   NOT NULL,
-    album_id      INT,
+    album_id      INT            NOT NULL,
     media_type_id INT            NOT NULL,
     genre_id      INT,
     composer      VARCHAR(220),
@@ -109,7 +108,7 @@ CREATE TABLE price
 (
     price_id SERIAL PRIMARY KEY,
     value    NUMERIC(10, 2) NOT NULL,
-    date     TIMESTAMP      NOT NULL,
+    price_date     TIMESTAMP      NOT NULL,
     track_id INT            NOT NULL
 );
 
@@ -129,10 +128,7 @@ CREATE TABLE address_info
     city            TEXT,
     state           TEXT,
     country         TEXT,
-    postalcode      TEXT,
-    phone           TEXT,
-    fax             TEXT,
-    email           TEXT,
+    postal_code      TEXT,
     CONSTRAINT address_info_pkey PRIMARY KEY (address_info_id)
 );
 

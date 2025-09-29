@@ -88,3 +88,10 @@ CREATE INDEX idx_track_album_id
 -- Album → Artist (join)
 CREATE INDEX idx_album_artist_id
     ON album(artist_id);
+
+-- DROP INDEX IF EXISTS idx_invoice_customer_id;
+-- DROP INDEX IF EXISTS idx_invoice_line_invoice_id;
+-- DROP INDEX IF EXISTS idx_invoice_line_track_id;
+-- DROP INDEX IF EXISTS idx_track_genre_id;
+-- DROP INDEX IF EXISTS idx_track_album_id;
+-- DROP INDEX IF EXISTS idx_album_artist_id;
